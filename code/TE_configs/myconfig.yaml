@@ -1,0 +1,26 @@
+# Information-theoretic statistics
+.statistics.infotheory:
+  # Transfer entropy
+  TransferEntropy:
+    labels:
+      - directed
+      - nonlinear
+      - unsigned
+      - bivariate
+      - time-dependent
+    dependencies: 
+      - java
+    configs:
+      # Kraskov estimator with auto-embedding on source/target and DCE
+      - estimator: kraskov
+        prop_k: 4
+        auto_embed_method: MAX_CORR_AIS
+        k_search_max: 2
+        tau_search_max: 2
+
+      - estimator: kraskov
+        prop_k: 4
+        auto_embed_method: MAX_CORR_AIS
+        k_search_max: 2
+        tau_search_max: 2
+        dyn_corr_excl: AUTO

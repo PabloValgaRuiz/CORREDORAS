@@ -1,0 +1,10 @@
+|   chaotic_system   |   $x\ \rarr \ y$   |   IDK   |   **0.0000**   |   
+|   chaotic_system   |   $y\ \rarr \ x$   |   IDK   |   0.5347   |   
+|   CAM   |   $x\ \rarr \ y$   |   IDK   |   **0.0029**   |   
+|   CAM   |   $y\ \rarr \ x$   |   IDK   |   0.0503   |   
+|   CAM (external common influence)   |   $x\ \rarr \ y$   |   IDK   |   0.9997   |   
+|   CAM (external common influence)   |   $y\ \rarr \ x$   |   IDK   |   **0.0035**   |   
+|   Paramecium_Didinium_0.375   |   $x\ \rarr \ y$   |   IDK   |   **0.0291**   |   
+|   Paramecium_Didinium_0.375   |   $y\ \rarr \ x$   |   IDK   |   **0.0071**   |   
+|   Paramecium_Didinium_0.5   |   $x\ \rarr \ y$   |   IDK   |   **0.0007**   |   
+|   Paramecium_Didinium_0.5   |   $y\ \rarr \ x$   |   IDK   |   **0.0010**   |   

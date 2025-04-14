@@ -1,0 +1,2 @@
+|   chaotic_system   |   $x\ \rarr \ y$   |   IDK   |   0.380   |   0.595   |   0.819   |   0.999   |   
+|   chaotic_system   |   $y\ \rarr \ x$   |   IDK   |   0.632   |   0.615   |   0.611   |   0.779   |   
