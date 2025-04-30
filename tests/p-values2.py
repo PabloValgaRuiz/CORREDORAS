@@ -95,6 +95,7 @@ def method_TE_kraskov_k1(x, y, **kwargs):
     print(results)
 
     for column in results.columns.levels[0]:
+        #                       [COLUMN][ROW] ---> OPPOSITE TO NUMPY, SO THIS IS INFROMATION FROM 0 (ROW) TO 1 (COLUMN)
         return results[column]['proc-1']['proc-0']
     
     raise ValueError("No results found in the table")
@@ -114,6 +115,7 @@ def method_TE_kraskov_DCE(x, y, **kwargs):
     print(results)
 
     for column in results.columns.levels[0]:
+        #                       [COLUMN][ROW] ---> OPPOSITE TO NUMPY, SO THIS IS INFROMATION FROM 0 TO 1
         return results[column]['proc-1']['proc-0']
     
     raise ValueError("No results found in the table")
@@ -128,6 +130,7 @@ def method_TE_kraskov(x, y, **kwargs):
     print(results)
 
     for column in results.columns.levels[0]:
+        #                       [COLUMN][ROW] ---> OPPOSITE TO NUMPY, SO THIS IS INFROMATION FROM 0 TO 1
         return results[column]['proc-1']['proc-0']
     
     raise ValueError("No results found in the table")
@@ -170,7 +173,8 @@ def obtain_pvalues(t, x, y, causal_method, nshuff = 10,  **kwargs): # arguments 
         x3 = stationary_bootstrap(x)
         # y3 = stationary_bootstrap(y)
         # x3 = x1                                   # Y IS ALSO BOOTSTRAPPED
-        futures[i] = compute_pvalues_parallel(x1, x2, x3, y, causal_method, **kwargs)
+        y3 = stationary_bootstrap(y)
+        futures[i] = compute_pvalues_parallel(x1, x2, x3, y3, causal_method, **kwargs)
 
     
     pval1 = 0
@@ -202,11 +206,11 @@ def signif(pval, alpha = 0.05):
 if __name__ == '__main__':
 
     systems = {
-               "chaotic_system":chaotic_system,
-               "CAM":CAM,
-               "CAM (external common influence)":CAM_external,
-               "Paramecium_Didinium_0.375":Paramecium_Didinium_0_375,
-               "Paramecium_Didinium_0.5":Paramecium_Didinium_0_5
+               "chaotic_system":chaotic_system#,
+            #    "CAM":CAM,
+            #    "CAM (external common influence)":CAM_external,
+            #    "Paramecium_Didinium_0.375":Paramecium_Didinium_0_375,
+            #    "Paramecium_Didinium_0.5":Paramecium_Didinium_0_5
                }
     
     # Table for different entropies
@@ -221,15 +225,18 @@ if __name__ == '__main__':
     # methods = {"TE":method_TE,
     #            "CCM":method_CCM}
 
-    nshuff = 10000
+    nshuff = 1000
     # system = "chaotic_system"
 
 # methods in columns
 
     # open file
-    with open('pvalues_bootstrap_source.txt', 'w') as f:
+    with open('pvalues_bootstrap_both_PRUEBA.txt', 'w') as f:
         for system in systems:
             t,x,y = systems[system](corr_yx = 0.4, timesteps = 200, dt = 1, noise = 0.01)
+            result1 = method_TE_kraskov_k1(x, y)
+            print("result1:   ", result1)
+            exit(0)
             f.write("|   "+system+"   |   "+r"$x\ \rarr \ y$"+"   |   IDK   |   ")
             for method in methods:
                 corr, pval3 = obtain_pvalues(t, x, y, methods[method], nshuff = nshuff, k = 1, embedding = 1)

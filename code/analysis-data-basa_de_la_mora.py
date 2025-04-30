@@ -104,20 +104,11 @@ if __name__ == '__main__':
             print('Species %s has all zeros!' %(spec))
             myspecies.remove(spec)
             mydf = mydf.drop(columns=[spec])
-
-    fig = plt.figure(figsize=(5,4))
-    vx = mydf['age']
-    for spec in myspecies:
-        vy = mydf[spec]
-        plt.scatter(vx, vy, label=spec, s=5)
-    ax = plt.gca()
-    ax.spines[['right', 'top']].set_visible(False)
-    plt.legend(bbox_to_anchor=(1.025,0.7),loc='upper left')
-    plt.savefig('plots-tests/basa_data-sel_species.pdf')
     
 #____________________________________________________ GAM ____________________________________________________
     k = 2
     embedding = 2
+
     fit_type = 'fit_140_0.01'
     if 0: # DO NOT DO GAM IF IT ALREADY EXISTS
         print('\nComputing GAM ....')
