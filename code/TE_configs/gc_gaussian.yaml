@@ -1,0 +1,24 @@
+# Basic statistics
+# Information-theoretic statistics
+.statistics.infotheory:
+  # Transfer entropy
+  TransferEntropy:
+    labels:
+      - directed
+      - nonlinear
+      - unsigned
+      - bivariate
+      - time-dependent
+    dependencies: 
+      - java
+    configs:
+      # Gaussian estimator doesn't have DCE (aka Bartlett corrections) yet
+      
+      # - estimator: gaussian
+      #   auto_embed_method: MAX_CORR_AIS
+      #   k_search_max: 10
+      #   tau_search_max: 2
+
+      - estimator: gaussian
+        k_history: 1
+        l_history: 1

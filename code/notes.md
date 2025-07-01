@@ -264,12 +264,160 @@ Back to the data from la Mora, the distribution of data points over time is the 
 
 The average number of datapoints is by definition 40, but they range from 20 to 70.
 
+# The Granger Causality vs Transfer Entropy discussion
+
+Up until now, Granger Causality has not been considered in this analysis for being a weaker version of Transfer Entropy, since it cannot capture non-linear relationships. However, the algorithms used to calculate GC and TE are vastly different.
+
+While Granger Causality relies on linear regression used to fit a  small number of parameters, Transfer Entropy needs to reconstruct the probability distributions of all variables involved, meaning that the dimensionality of the system is very high for the small number of points in question (around 40).
+
+This, in addition to the mostly flat distribution of p-values found when using this algorithm with stationary bootstrapping, leads us to believe that the values obtained are questionable.
+
+![](plots_notes/histogram_basa.png)
+
+NOTE: While it is claimed that the use of a Gaussian approximator in Transfer Entropy is equivalent to Granger Causality [[5]](#5), the algorithm provided for its calculation (Transfer Entropy using Gaussina approximator) in [[6]](#6) returns very different results from the linear regression algorithm provided by the Python library *statsmodels*, as seen below:
+
+![](plots_notes/GC_vs_TE_gauss.png)
+(NOTE: the x axis represents the GC calculated by the linear regression in *statsmodels*, not transfer entropy as the figure says).
+
+
+Below we compare the results from the TE Kraskov estimator and the gaussian estimator:
+
+![](plots_notes/TE_vs_TE_gauss.png)
+
+In this figure it is evident that the values from the two algorithms do not correspond at all, given that the gaussian approximator reduces the probability distributions to a mean, a variance and the respective covariances across variables, resulting in a much lower dimensionality and likely less random results. In fact, when comparing the p-value distributions from Transfer Entropy and Granger Causality (as calculated with the *statsmodels* library), there is a notable peak suggesting that the GC algorithm is finding real causal relations more consistently.
+
+![](plots_notes/TE_vs_GC_p_values.png)
+
+
+# Results
+
+## Basa de la Mora
+
+For 3 windows without overlapping, the p-value cutoff is set at $p = 0.01$. The main results are as follows.
+
+### Network representation
+
+![](plots_notes/gc_networks_basa_firewindows.png)
+
+### General description
+The number of edges in each time window is:
+| Time window | Edges | Percentage of negative links |
+| :----: | :----: | :----: |
+| (9798 - 6253)   | 161  | 9.9 %  |
+| (6182 - 3842)   | 252  | 29.8 % |
+| (3771 - -56.87) | 155  | 22.6 % |
+
+### Out-degree distribution
+and the out-degree distributions are:
+
+![](plots_notes/out_degree_distributions_basa_firewindows.png)
+
+The nodes with least temporality are:
+
+
+
+### Individual temporalities
+
+Below are represented the distributions of temporalities pertaining each individual node in the network, defined as the intersection of a node's edges from one window to the next, with respect to the union of said edges, meaning the portion of links that persist.
+
+Here we see that, while a large number of nodes do not retain their edges, there is some variance.
+
+![](plots_notes/node_temporality_firewindows_basa.png)
+
+The least temporal nodes are:
+
+| Node | Temporality (First windows) |
+| :----: | :----: |
+| Juglans   | 0.8 (1-(1 / 5)) |
+| Populus   | 0.8  |
+| Alnus | 0.857 (1-(1 / 7))  |
+| Chenopodiaceae | 0.857  |
+| Saxifragaceae | 0.857  |
+| Genista | 0.857  |
+
+| Node | Temporality (Second windows) |
+| :----: | :----: |
+| Galium   | 0.857 |
+| Populus   | 0.8  |
+| Chenopodiaceae | 0.9 (1 - 1/10) |
+| Salix | 0.9  |
+| Liliaceae | 0.9  |
+| Genista | 0.857  |
+
+It seems that, on these time windows, no node keeps more than one link. Populus keeps some links both times.
+
+### Eigenvector centralities
+Top species centralities window and the sum of all windows:
+idx| 0 |1|2|sum
+| :----: | :----: | :----: | :----: | :----: |
+Cardueae        |0.182|0.105|0.409|0.697
+Fraxinus        |0.179|0.037|0.434|0.651
+Scrophulariaceae|0.256|0.259|0.050|0.566
+Fabaceae        |0.204|0.125|0.216|0.546
+Salix           |0.310|0.129|0.093|0.534
+Rosaceae        |0.268|0.251|0.000|0.519
+Convolvulaceae  |0.196|0.182|0.100|0.479
+Centaurea       |0.125|0.281|0.066|0.473
+
+The Spearman correlation across the centralities of the species between windows are:
+
+0->1: 0.38
+
+1->2: 0.01
+
+(These values have changed now that we are measuring the specie's centralities when affecting others, not being affected by others.)
+
+### Weisfeiler-Lehman Kernel
+
+This metric estimates the similarity between networks with anonymous nodes. Here we compare the similarity between adjacent windows to the result given by pairs of random networks with the same number of nodes and edges.
+
+0-50 to 51-84:   662 / 447
+51-84 to 85-140: 442 / 428
+
+## Garba Guracha
+
+For 4 windows without overlapping, the p-value cutoff is set at $p = 0.01$. The main results are as follows.
+
+### Network representation
+
+![](plots_notes/gc_networks_GG_firewindows.png)
+
+### General description
+The number of edges in each time window is:
+| Time window | Edges | Percentage of negative links |
+| :----: | :----: | :----: |
+| (13675 - 11101)   | 127  | 37.0 %  |
+| (11055 - 6827)   | 255  | 13.0 % |
+| (6781 - 2231) | 191  | 24.0 % |
+| (2185 - -66) | 336  | 17.2 % |
+
+
+### Out-degree distribution
+and the out-degree distributions are:
+
+![](plots_notes/out_degree_distributions_GG_firewindows.png)
+
+### Individual temporalities
+
+![](plots_notes/node_temporality_firewindows_GG.png)
+
+### Eigenvector centralities
+
+| Node | Eigenvalue centrality (First window)|
+| :----: | :----: |
+| Euclea   | 0.368 |
+| Hagenia   | 0.310  |
+| Artemisia | 0.309  | 
+| Lamiaceae | 0.286 |
+| Aloe | 0.282  |
+| Capparidaceae |  0.271 |
+
 <a id="1">[1]</a>
 Veilleux, B. G. (1976). The analysis of a predatory interaction between Didinium and Paramecium.`</br>`
 DOI: https://doi.org/10.7939/r3-zvqq-gz50
 
 <a id="2">[2]</a>
-Jost, C., & Ellner, S. P. (2000). Testing for predator dependence in predator-prey dynamics: a non-parametric approach. Proceedings of the Royal Society of London. Series B: Biological Sciences, 267(1453), 1611-1620.`</br>`
+Jost, C., & Ellner, S. P. (2000). Testing for predator dependence in predator-prey dynamics: a non-parametric approach. Proceedings of the Royal Society of London. Series B: Biological Sciences, 267(1453), 1611-1620.
 DOI: https://doi.org/10.1098/rspb.2000.1186
 
 <a id="3">[3]</a>
@@ -277,3 +425,9 @@ Chávez, M., Martinerie, J., & Le Van Quyen, M. (2003). Statistical assessment o
 
 <a id="4">[4]</a>
 Chávez, M., Martinerie, J., & Le Van Quyen, M. (2003). Statistical assessment of nonlinear causality: application to epileptic EEG signals. Journal of neuroscience methods, 124(2), 113-128.
+
+<a id="5">[5]</a>
+Barnett, L., Barrett, A. B., & Seth, A. K. (2009). Granger causality and transfer entropy are equivalent for Gaussian variables. Physical review letters, 103(23), 238701.
+
+<a id="6">[6]</a>
+Cliff, O. M., Bryant, A. G., Lizier, J. T., Tsuchiya, N., & Fulcher, B. D. (2023). Unifying pairwise interactions in complex dynamics. Nature Computational Science, 3(10), 883-893.

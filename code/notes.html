@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Updates on the causality measures of time series</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="updates-on-the-causality-measures-of-time-series">Updates on the causality measures of time series</h1>
+<p>- Pablo</p>
+<h2 id="choice-of-gam-parameters-for-ccm">Choice of GAM parameters for CCM</h2>
+<p>There are two main parameters that determine the fit:</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mrow><mi>s</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>n</mi><mi>e</mi><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">n_{splines}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">pl</span><span class="mord mathnormal mtight">in</span><span class="mord mathnormal mtight">es</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> : the number of splines used to fit the data, which should not be higher than the number of datapoints (overfitting)</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span>: the penalty for overfitting, a higher <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> leads to smoother curves and a low <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> gives us curves with sharp turns that are more likely to go near each datapoint.</li>
+</ul>
+<p>The <em>grid search</em> algorithm from pyGAM looks for a fit that captures the general trend of the curve without overfitting. We compare this to a fit of 140 splines (same as the number of datapoints) with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>λ</mi><mo>=</mo><mn>0.01</mn></mrow><annotation encoding="application/x-tex">\lambda = 0.01</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.01</span></span></span></span>, that goes near every point. We refer to each as</p>
+<ul>
+<li>grid</li>
+<li>fit_140_0.01</li>
+</ul>
+<p>The following plots show both fits on the species Pinus and Betula.</p>
+<h3 id="grid">grid</h3>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/timeseries_Pinus_Betula_grid.png" alt="grid"></p>
+<h3 id="fit_140_001">fit_140_0.01</h3>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/timeseries_Pinus_Betula_fit_140_0.01.png" alt="grid"></p>
+<p>The results suggest that the grid configuration erases a large part of the information from the time series, making it impossible to determine any causal relationship with the CCM method. More specifically, it almost always returns a very high <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi></mrow><annotation encoding="application/x-tex">\rho</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span></span></span></span>. Here are the histograms of the results obtained for every pair of species using each fit.</p>
+<h3 id="grid-fit">grid fit</h3>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/histogram_rho_grid.png" alt="histogram_grid"></p>
+<h3 id="fit_140_001-1">fit_140_0.01</h3>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/histogram_rho_fit_140_0.01.png" alt="histogram_fit"></p>
+<p>Looking at any pair of time series that return <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>≈</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\rho \approx 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6776em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, like Gentiana and Osmunda, we can understand why these values are so high.</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/timeseries_Gentiana_Osmunda_grid.png" alt="timeseries_Gentiana_Osmunda"></p>
+<p>The following plot shows the state space reconstruction for both variables in 2D</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/phase_space_grid.png" alt=""></p>
+<p>In CCM, the nearest neighbors from (x(t),x(t-1)) in the shadow manifold Mx are then used to estimate y(t), meaning y(t) left a signature on Mx and thus y causes x in some way. Here, the nearest neighbors from (x(t), x(t-1)) are the points closest to it in time, and the same holds in My, meaning the prediction is always correct even if there is no causality. For CCM to work as intended, the closest neighbors should not be the points adjacent in time, and a very smooth function with very few datapoints will not work for our case.</p>
+<p>The same pair using the fit_140_0.01 curves returns a <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi></mrow><annotation encoding="application/x-tex">\rho</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span></span></span></span> of 0.0016 as opposed to 0.99998, with the following state space reconstruction.</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/phase_space_fit.png" alt=""></p>
+<p>From now on, only the fit_140_0.01 approximaton will be used (not definitive)</p>
+<h2 id="analysis-of-ccm-and-transfer-entropy-in-different-dynamical-systems">Analysis of CCM and Transfer Entropy in different dynamical systems</h2>
+<h3 id="bidirectional-two-species-model">Bidirectional two-species model</h3>
+<p>We use a set of equations that can lead to chaotic behavior in the system:</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>x</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><msub><mi>x</mi><mi>t</mi></msub><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>3.8</mn><mo>−</mo><mn>3.8</mn><msub><mi>x</mi><mi>t</mi></msub><mo>−</mo><mn>0.1</mn><msub><mi>y</mi><mi>t</mi></msub><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>+</mo><msub><mi>ϵ</mi><mi>x</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><mo separator="true">,</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>y</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><msub><mi>y</mi><mi>t</mi></msub><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>3.5</mn><mo>−</mo><mn>3.5</mn><msub><mi>y</mi><mi>t</mi></msub><mo>−</mo><msub><mi>γ</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mtext> </mtext><msub><mi>x</mi><mi>t</mi></msub><mo fence="true" stretchy="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>+</mo><msub><mi>ϵ</mi><mi>y</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><mo separator="true">,</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+x_{t+1} &amp;= x_t \bigl( 3.8 - 3.8 x_t - 0.1 y_t \bigr) + \epsilon_x(t)\,, \\
+%
+y_{t+1} &amp;= y_t \bigl( 3.5 - 3.5 y_t - \gamma_{xy}\  x_t \bigr) + \epsilon_y(t)\,,
+\end{align}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.02em;vertical-align:-1.26em;"></span><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.76em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.4em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.26em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.76em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen"><span class="delimsizing size1">(</span></span><span class="mord">3.8</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">3.8</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.1</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing size1">)</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span></span></span><span style="top:-2.4em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen"><span class="delimsizing size1">(</span></span><span class="mord">3.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">3.5</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0556em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing size1">)</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.26em;"><span></span></span></span></span></span></span></span><span class="tag"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.76em;"><span style="top:-3.76em;"><span class="pstrut" style="height:2.85em;"></span><span class="eqn-num"></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:2.85em;"></span><span class="eqn-num"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.26em;"><span></span></span></span></span></span></span></span></span></p>
+<p>Where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>x</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_x(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>y</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_y(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> are independent Gaussian processes with variance <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>x</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sigma_x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0611em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>y</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sigma_y^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1972em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span></span></span></span>. Here, variable <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> slightly causes <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> and the opposite depends on the variable <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>γ</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\gamma_{xy}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0556em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>, which we intend to detect. These equations, in the absence of noise, lead to deterministic chaotic behavior. The time series is shown in the following plot.</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/chaotic_system.png" alt=""></p>
+<p>To analyze the capabilities of CCM, we test it against different values of the correlation <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>γ</mi><mi>x</mi></msub><mi>y</mi></mrow><annotation encoding="application/x-tex">\gamma_xy</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0556em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> and external random gaussian noise <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>x</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_x(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>y</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_y(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> (with variances <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>x</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sigma_x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0611em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span> = <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>y</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\sigma_y^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1972em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span></span></span></span> = 0 at first) for both variables.</p>
+<h4 id="ccm-1000-points">CCM (1000 points)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/CCM_two-species.png" alt=""></p>
+<p>As the plots show, CCM is great at detecting causality in a deterministic system, but is very sensitive to external noise. These results suggest that the presence of noise prevents the correct reconstruction of the attractor, even when there is a lot of data (arround 1000 points). This may make CCM difficult to apply to real ecological systems where there are countless external variables.</p>
+<p>In contrast to CCM, transfer entropy is based on information theory, and thus is supposed to deal with probability and noise. Let's see how it fares in the same conditions.</p>
+<h4 id="te-1000-points">TE (1000 points)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/TE_two-species.png" alt=""></p>
+<p>Transfer entropy appears to be significantly less sensitive, as it requires a strong correlation to detect the flow of information. It also seems to respond better to the random noise, although these equations only allow a variance of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>x</mi><mn>2</mn></msubsup><mo>=</mo><msubsup><mi>σ</mi><mi>y</mi><mn>2</mn></msubsup><mo>∼</mo><mn>0.015</mn></mrow><annotation encoding="application/x-tex">\sigma_x^2 = \sigma_y^2 \sim 0.015</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0611em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1972em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.015</span></span></span></span> before causing the variables to diverge with time. Let's try another set of equations.</p>
+<h3 id="coupled-autoregressive-model-cam">Coupled autoregressive model (CAM)</h3>
+<p>Similar to the previous system, the dynamics are driven by the following:</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>x</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mn>0.5</mn><mi>x</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><mn>0.2</mn><mi>y</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>ϵ</mi><mi>x</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><mo separator="true">,</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><msub><mi>y</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>C</mi><mi>x</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><mn>0.7</mn><mi>y</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>ϵ</mi><mi>y</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext> </mtext><mi mathvariant="normal">.</mi></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+x_{t+1} &amp;= 0.5x(t) + 0.2y(t) + \epsilon_x(t) \,, \\
+%
+y_{t+1} &amp;= Cx(t) + 0.7y(t) + \epsilon_y(t) \,.
+\end{align}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.75em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.75em;"><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">0.5</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.2</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.7</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span></span></span><span class="tag"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.75em;"><span style="top:-3.75em;"><span class="pstrut" style="height:2.84em;"></span><span class="eqn-num"></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:2.84em;"></span><span class="eqn-num"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span></span></span></span></p>
+<p>Where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>x</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_x(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϵ</mi><mi>y</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon_y(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> are also independent Gaussian processes, and C is the coupling strength from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>. Here we can see what the dynamics look like:</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/CAM.png" alt=""></p>
+<p>There are a few key differences between the dynamics of these equations and the ones before. The behavior is not chaotic in absence of noise, in fact the variables decrease exponentially to zero in that case. Additionally, the variables walk through a wider range of values and in smaller steps, as they reinforce each other and allow themselves to get far away from the equilibrium at zero (in contrast with the two-species model where they quickly oscillated). The results are as follows.</p>
+<h4 id="ccm-1000-points-1">CCM (1000 points)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/CCM_CAM.png" alt=""></p>
+<p>In the first panel, the noise amplitude is set to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>x</mi><mn>2</mn></msubsup><mo>=</mo><msubsup><mi>σ</mi><mi>y</mi><mn>2</mn></msubsup><mo>=</mo><mn>0.3</mn></mrow><annotation encoding="application/x-tex">\sigma_x^2 = \sigma_y^2 = 0.3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0611em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1972em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.3</span></span></span></span> (some noise is necessary for the dynamics to be sustained), and in the second panel the correlation <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">C = 0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span></span></span></span>.</p>
+<p>It is common for CCM to return false positives, but performs well with the correlation on the first panel. On the second one, it gives us very high values in cases where the noise is not high enough and the values of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> fall to zero.</p>
+<h4 id="te-1000-points-1">TE (1000 points)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/TE_CAM_1000.png" alt="">
+Just as with the CCM, the noise in the first panel is set to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>x</mi><mn>2</mn></msubsup><mo>=</mo><msubsup><mi>σ</mi><mi>y</mi><mn>2</mn></msubsup><mo>=</mo><mn>0.3</mn></mrow><annotation encoding="application/x-tex">\sigma_x^2 = \sigma_y^2 = 0.3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0611em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1972em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.3</span></span></span></span> and the correlation in the second panel to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">C = 0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.5</span></span></span></span>.</p>
+<p>The transfer entropy stays very low even for larger values of the correlation. It is possible that, in these time series, the change in a variable provides more information than the variable itself when it comes to predicting the next value, but detrending (with GAM) does not seem to bring better results.</p>
+<h4 id="te-detrended-1000-points">TE (detrended, 1000 points)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/TE_CAM_1000_detrend.png" alt=""></p>
+<h3 id="paramecium-and-didinium-empirical-predator-prey">Paramecium and Didinium (empirical predator-prey)</h3>
+<p>The next two time series come from the experiments performed in <a href="#1">[1]</a> (data digitilized by <a href="#2">[2]</a>), where they cultivated the two organisms with different concentrations of cerophyl <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">CC</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">CC</span></span></span></span> and measured their concentrations over time.</p>
+<h4 id="predator-prey-cc--0375">predator-prey (CC = 0.375)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/predator_prey_0.375.png" alt=""></p>
+<p>Results:</p>
+<h4 id="ccm">CCM</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/ccm_predator_prey_0.375.png" alt="">
+Where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>:</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x:y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> denotes the causality from predator to prey, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>:</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y:x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> from prey to predator.</p>
+<p>Transfer Entropy from predator to prey: 0.57</p>
+<p>Transfer Entropy from prey to predator: -0.34</p>
+<p>While the transfer entropy is not able to find causality from prey to predator, as it is less obvious than the other way around, CCM is.</p>
+<h4 id="predator-prey-cc--05">predator-prey (CC = 0.5)</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/predator_prey_0.5.png" alt=""></p>
+<p>Results:</p>
+<h4 id="ccm-1">CCM</h4>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/ccm_predator_prey_0.5.png" alt="">
+Where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>:</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x:y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> denotes the causality from predator to prey, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>:</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y:x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> from prey to predator.</p>
+<p>Transfer Entropy from x to y: 0.42</p>
+<p>Transfer Entropy from y to x: 0.36</p>
+<h2 id="summary-and-p-values">Summary and p-values</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">System (1000 points)</th>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">Direction</th>
+<th style="text-align:center">(real)<br />Correlation</th>
+<th style="text-align:center">Result</th>
+<th style="text-align:right">p-value (shuffle)</th>
+<th style="text-align:right">p-value (swap)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">1.22</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.0</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.45</td>
+<td style="text-align:right">0.235</td>
+<td style="text-align:right">0.305</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.97</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.0</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.134</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.008</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.191</td>
+<td style="text-align:right">0.271</td>
+<td style="text-align:right">0.262</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.388</td>
+<td style="text-align:right">0.360</td>
+<td style="text-align:right">0.321</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.004</td>
+<td style="text-align:right">0.524</td>
+<td style="text-align:right">0.493</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.002</td>
+<td style="text-align:right">0.495</td>
+<td style="text-align:right">0.634</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.030</td>
+<td style="text-align:right">0.113</td>
+<td style="text-align:right">0.182</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>0.2</strong></td>
+<td style="text-align:center">0.021</td>
+<td style="text-align:right">0.688</td>
+<td style="text-align:right">0.731</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.90</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.0</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>0.2</strong></td>
+<td style="text-align:center">0.92</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.002</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.397</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right">0.887</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.215</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right">0.882</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.995</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.001</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.995</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.003</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">-0.33</td>
+<td style="text-align:right">0.918</td>
+<td style="text-align:right">0.95</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.57</td>
+<td style="text-align:right"><strong>0.002</strong></td>
+<td style="text-align:right"><strong>0.0</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.50</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right">0.124</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.56</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right">0.081</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.42</td>
+<td style="text-align:right"><strong>0.001</strong></td>
+<td style="text-align:right"><strong>0.032</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.36</td>
+<td style="text-align:right"><strong>0.007</strong></td>
+<td style="text-align:right"><strong>0.0</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.70</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.034</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.73</td>
+<td style="text-align:right"><strong>0.0</strong></td>
+<td style="text-align:right"><strong>0.016</strong></td>
+</tr>
+</tbody>
+</table>
+<p>To summarize, Convergent Cross Mapping seems to return false positives, especially when there is some relationship between the variables (either on the opposite direction or with an external common influence). Transfer entropy however fails to find causality unless it's very strong.</p>
+<p>Additionally, for only 40 points of data:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">System (40 points)</th>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">Direction</th>
+<th style="text-align:center">(real)<br />Correlation</th>
+<th style="text-align:center">Result</th>
+<th style="text-align:right">p-value (shuffle)</th>
+<th style="text-align:right">p-value (swap)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.367</td>
+<td style="text-align:right"><strong>0.009</strong></td>
+<td style="text-align:right">0.056</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.804</td>
+<td style="text-align:right">0.243</td>
+<td style="text-align:right">0.193</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.054</td>
+<td style="text-align:right">0.346</td>
+<td style="text-align:right">0.395</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.159</td>
+<td style="text-align:right">0.183</td>
+<td style="text-align:right">0.290</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.524</td>
+<td style="text-align:right">0.050</td>
+<td style="text-align:right">0.083</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.713</td>
+<td style="text-align:right">0.221</td>
+<td style="text-align:right">0.454</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.095</td>
+<td style="text-align:right">0.260</td>
+<td style="text-align:right">0.597</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.192</td>
+<td style="text-align:right">0.162</td>
+<td style="text-align:right">0.359</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.090</td>
+<td style="text-align:right">0.154</td>
+<td style="text-align:right">0.765</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>0.2</strong></td>
+<td style="text-align:center">-0.205</td>
+<td style="text-align:right">0.187</td>
+<td style="text-align:right">0.772</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.866</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right">0.112</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>0.2</strong></td>
+<td style="text-align:center">0.990</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.039</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.049</td>
+<td style="text-align:right">0.999</td>
+<td style="text-align:right">0.975</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">-0.176</td>
+<td style="text-align:right">0.531</td>
+<td style="text-align:right">0.927</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.589</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right">0.219</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.772</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right">0.230</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">-0.244</td>
+<td style="text-align:right">0.621</td>
+<td style="text-align:right">0.865</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.392</td>
+<td style="text-align:right"><strong>0.004</strong></td>
+<td style="text-align:right"><strong>0.000</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.480</td>
+<td style="text-align:right"><strong>0.005</strong></td>
+<td style="text-align:right">0.761</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.602</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right">0.506</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.251</td>
+<td style="text-align:right"><strong>0.031</strong></td>
+<td style="text-align:right">0.068</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">TE</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.349</td>
+<td style="text-align:right"><strong>0.010</strong></td>
+<td style="text-align:right"><strong>0.021</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.857</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.000</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center">CCM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.723</td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.048</strong></td>
+</tr>
+</tbody>
+</table>
+<p>For the surrogate series p-value calculation and the different transfer entropy algorithm from the package pyspi:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">System (200 points)</th>
+<th style="text-align:center">Direction</th>
+<th style="text-align:center">(real)<br />Correlation</th>
+<th style="text-align:center">TE</th>
+<th style="text-align:center">TE kraskov k1</th>
+<th style="text-align:right">TE kraskov DCE</th>
+<th style="text-align:center">TE kraskov</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.182</td>
+<td style="text-align:center">0.572</td>
+<td style="text-align:right">0.573</td>
+<td style="text-align:center">0.185</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.380</td>
+<td style="text-align:center">0.595</td>
+<td style="text-align:right">0.819</td>
+<td style="text-align:center">0.999</td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model (no correlations)</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.632</td>
+<td style="text-align:center">0.615</td>
+<td style="text-align:right">0.611</td>
+<td style="text-align:center">0.779</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center">0.389</td>
+<td style="text-align:center"><strong>0.006</strong></td>
+<td style="text-align:right"><strong>0.035</strong></td>
+<td style="text-align:center"><strong>0.023</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>0.2</strong></td>
+<td style="text-align:center">0.137</td>
+<td style="text-align:center"><strong>0.019</strong></td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:center">0.119</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center"><strong>0.004</strong></td>
+<td style="text-align:center">1.000</td>
+<td style="text-align:right">0.671</td>
+<td style="text-align:center">1.000</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.000</strong></td>
+<td style="text-align:center">0.993</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center">0.946</td>
+<td style="text-align:center"><strong>0.006</strong></td>
+<td style="text-align:right"><strong>0.001</strong></td>
+<td style="text-align:center"><strong>0.041</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.001</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.017</strong></td>
+<td style="text-align:center">0.445</td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.003</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.001</strong></td>
+<td style="text-align:center"><strong>0.024</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.016</strong></td>
+<td style="text-align:center"><strong>0.000</strong></td>
+<td style="text-align:right"><strong>0.002</strong></td>
+<td style="text-align:center"><strong>0.001</strong></td>
+</tr>
+</tbody>
+</table>
+<p>We settle for the Kraskov method with 4 nearest neighbours, dimension 1 for both source and destination series and time lag equal to 1 (above as TE kraskov k1), which has only returned one false positive, and is</p>
+<p>For the calculation of the p-value, we have used surrogate series constructed from the fourier decomposition of the original, and adding a phase (package pyunicorn -&gt; timeseries.Surrogates.correlated_noise_surrogates() ). This breaks the time dependency but preserves the autocorrelation of the series.</p>
+<p>A different method for obtaining the p-values that we examine is the <strong>stationary bootstrap</strong>. We assess whether in our case it is equivalent to bootstrap the source series exclusively versus both series. The opposite is suggested in [<a href="#3">3</a>,<a href="#4">4</a>].</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">System (200 points)</th>
+<th style="text-align:center">Direction</th>
+<th style="text-align:center">(real)<br />Correlation</th>
+<th style="text-align:center">Bootstrap source</th>
+<th style="text-align:center">Bootstrap both</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center"><strong>0.0000</strong></td>
+<td style="text-align:center"><strong>0.0000</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Bi-directional model</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.5347</td>
+<td style="text-align:center">0.0709</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>0.4</strong></td>
+<td style="text-align:center"><strong>0.0029</strong></td>
+<td style="text-align:center"><strong>0.0022</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">CAM</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>0.2</strong></td>
+<td style="text-align:center">0.0503</td>
+<td style="text-align:center">0.0848</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0.9997</td>
+<td style="text-align:center">0.9999</td>
+</tr>
+<tr>
+<td style="text-align:left">CAM (external common influence)</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center">0</td>
+<td style="text-align:center"><strong>0.0035</strong></td>
+<td style="text-align:center"><strong>0.0011</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.0291</strong></td>
+<td style="text-align:center"><strong>0.0156</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.375</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.0071</strong></td>
+<td style="text-align:center"><strong>0.0015</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>y</mi></mrow><annotation encoding="application/x-tex">x\ \rarr \ y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.0007</strong></td>
+<td style="text-align:center"><strong>0.0001</strong></td>
+</tr>
+<tr>
+<td style="text-align:left">Paramecium_Didinium_0.5</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext> </mtext><mo>→</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y\ \rarr \ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></td>
+<td style="text-align:center"><strong>True</strong></td>
+<td style="text-align:center"><strong>0.0010</strong></td>
+<td style="text-align:center"><strong>0.0000</strong></td>
+</tr>
+</tbody>
+</table>
+<h1 id="data-points-and-time-intervals">Data points and time intervals</h1>
+<p>Back to the data from la Mora, the distribution of data points over time is the same for every species, but not equidistant. The next figure shows the number of datapoints inside each interval. Given 140 data points, and assuming them to be equidistant, we can divide the timeline in 7 intervals of width 20. By overlapping them we get 6 intervals of width 40.</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/age_histogram.png" alt=""></p>
+<p>The average number of datapoints is by definition 40, but they range from 20 to 70.</p>
+<h1 id="the-granger-causality-vs-transfer-entropy-discussion">The Granger Causality vs Transfer Entropy discussion</h1>
+<p>Up until now, Granger Causality has not been considered in this analysis for being a weaker version of Transfer Entropy, since it cannot capture non-linear relationships. However, the algorithms used to calculate GC and TE are vastly different.</p>
+<p>While Granger Causality relies on linear regression used to fit a  small number of parameters, Transfer Entropy needs to reconstruct the probability distributions of all variables involved, meaning that the dimensionality of the system is very high for the small number of points in question (around 40).</p>
+<p>This, in addition to the mostly flat distribution of p-values found when using this algorithm with stationary bootstrapping, leads us to believe that the values obtained are questionable.</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/histogram_basa.png" alt=""></p>
+<p>NOTE: While it is claimed that the use of a Gaussian approximator in Transfer Entropy is equivalent to Granger Causality <a href="#5">[5]</a>, the algorithm provided for its calculation (Transfer Entropy using Gaussina approximator) in <a href="#6">[6]</a> returns very different results from the linear regression algorithm provided by the Python library <em>statsmodels</em>, as seen below:</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/GC_vs_TE_gauss.png" alt="">
+(NOTE: the x axis represents the GC calculated by the linear regression in <em>statsmodels</em>, not transfer entropy as the figure says).</p>
+<p>Below we compare the results from the TE Kraskov estimator and the gaussian estimator:</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/TE_vs_TE_gauss.png" alt=""></p>
+<p>In this figure it is evident that the values from the two algorithms do not correspond at all, given that the gaussian approximator reduces the probability distributions to a mean, a variance and the respective covariances across variables, resulting in a much lower dimensionality and likely less random results. In fact, when comparing the p-value distributions from Transfer Entropy and Granger Causality (as calculated with the <em>statsmodels</em> library), there is a notable peak suggesting that the GC algorithm is finding real causal relations more consistently.</p>
+<p><img src="file:////home/paval/papers/CORREDORAS/pablo_python/code/plots_notes/TE_vs_GC_p_values.png" alt=""></p>
+<p><a id="1">[1]</a>
+Veilleux, B. G. (1976). The analysis of a predatory interaction between Didinium and Paramecium.<code>&lt;/br&gt;</code>
+DOI: <a href="https://doi.org/10.7939/r3-zvqq-gz50">https://doi.org/10.7939/r3-zvqq-gz50</a></p>
+<p><a id="2">[2]</a>
+Jost, C., &amp; Ellner, S. P. (2000). Testing for predator dependence in predator-prey dynamics: a non-parametric approach. Proceedings of the Royal Society of London. Series B: Biological Sciences, 267(1453), 1611-1620.
+DOI: <a href="https://doi.org/10.1098/rspb.2000.1186">https://doi.org/10.1098/rspb.2000.1186</a></p>
+<p><a id="3">[3]</a>
+Chávez, M., Martinerie, J., &amp; Le Van Quyen, M. (2003). Statistical assessment of nonlinear causality: application to epileptic EEG signals. Journal of neuroscience methods, 124(2), 113-128.</p>
+<p><a id="4">[4]</a>
+Chávez, M., Martinerie, J., &amp; Le Van Quyen, M. (2003). Statistical assessment of nonlinear causality: application to epileptic EEG signals. Journal of neuroscience methods, 124(2), 113-128.</p>
+<p><a id="5">[5]</a>
+Barnett, L., Barrett, A. B., &amp; Seth, A. K. (2009). Granger causality and transfer entropy are equivalent for Gaussian variables. Physical review letters, 103(23), 238701.</p>
+<p><a id="6">[6]</a>
+Cliff, O. M., Bryant, A. G., Lizier, J. T., Tsuchiya, N., &amp; Fulcher, B. D. (2023). Unifying pairwise interactions in complex dynamics. Nature Computational Science, 3(10), 883-893.</p>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
