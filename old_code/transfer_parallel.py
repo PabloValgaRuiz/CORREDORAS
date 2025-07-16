@@ -54,7 +54,7 @@ def worker_process(index, start=0, end=140):
     calc = Calculator(dataset = bootstrapped_array, configfile='TE_configs/kraskov_k1.yaml')
     calc.compute()
     results = calc.table
-    pd.to_pickle(results, f'{results_dir}/transfer_entropies/TE_matrix{index}_{start}:{end}.pkl')
+    pd.to_pickle(results, f'{results_dir}/transfer_entropies/TE_matrix{index}_{start}-{end}.pkl')
 
 def main():
 
@@ -90,7 +90,7 @@ def main():
         calc.compute()
         original_table = calc.table
         # save the original table to a file
-        pd.to_pickle(original_table, f'{results_dir}/transfer_entropies/original_table_{start}:{end}.pkl')
+        pd.to_pickle(original_table, f'{results_dir}/transfer_entropies/original_table_{start}-{end}.pkl')
         exit(0)
 
     #____________________________________________________________________

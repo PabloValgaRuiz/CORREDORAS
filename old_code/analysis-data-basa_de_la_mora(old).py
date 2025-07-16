@@ -31,10 +31,10 @@ def concurrent_TE(columns, target, fit_type, k, embedding):
                             k=k, embedding=embedding, safetyCheck=False, GPU=False)
     
     results = {}
-    results[f'{columns}:{target}'] = TE2
-    results[f'{target}:{columns}'] = TE1
+    results[f'{columns}-{target}'] = TE2
+    results[f'{target}-{columns}'] = TE1
     
-    print(f'finished {columns}:{target}. Results: TE1={TE1}, TE2={TE2}')
+    print(f'finished {columns}-{target}. Results: TE1={TE1}, TE2={TE2}')
 
     return results
 
@@ -170,10 +170,10 @@ if __name__ == '__main__':
                 if i <= j:  # The crucial condition: i must be less than j
                     continue
                 print('Computing %s:%s' %(columns, target))
-                # futures_CCM[columns+':'+target] = executor.submit(concurrent_CCM, columns, target, fit_type)
-                futures_te[columns+':'+target] = executor.submit(concurrent_TE, columns, target, fit_type, k, embedding)
+                # futures_CCM[columns+'-'+target] = executor.submit(concurrent_CCM, columns, target, fit_type)
+                futures_te[columns+'-'+target] = executor.submit(concurrent_TE, columns, target, fit_type, k, embedding)
 
-                # futures[columns+':'+target] = concurrent_CCM(columns, target, fit_type)
+                # futures[columns+'-'+target] = concurrent_CCM(columns, target, fit_type)
     
     for key in futures_te.keys():
         results_te[key] = futures_te[key].result()

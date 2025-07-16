@@ -58,11 +58,6 @@ if __name__ == '__main__':
     mydf_total_pollen = mydf_total_pollen.rename(columns={'Cerealia-type':'Cerealia_type'})
 
 
-
-    mydf_total_pollen = mydf_total_pollen.rename(columns={'':''})
-
-
-
     for spec in myspecies[:]: # ITERATE OVER A COPY
         if mydf[spec].sum() == 0:
             print('Species %s has all zeros!' %(spec))

@@ -84,8 +84,8 @@ def main():
     
     original_table_causality, original_table_p_values = grangers_causation_matrix(array, variables=myspecies)
     # save the original table to a file
-    pd.to_pickle(original_table_causality, f'{results_dir}/granger_causalities/original_table_{start}:{end}.pkl')
-    pd.to_pickle(original_table_p_values, f'{results_dir}/granger_causalities/original_table_p_values_{start}:{end}.pkl')
+    pd.to_pickle(original_table_causality, f'{results_dir}/granger_causalities/original_table_{start}-{end}.pkl')
+    pd.to_pickle(original_table_p_values, f'{results_dir}/granger_causalities/original_table_p_values_{start}-{end}.pkl')
     
     end_time = time.perf_counter()
     print(f"Time taken for bootstrapping: {end_time - start_time} seconds")
