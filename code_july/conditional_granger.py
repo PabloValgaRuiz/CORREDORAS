@@ -1,8 +1,5 @@
 import pandas as pd
 import numpy as np
-
-import pandas as pd
-import numpy as np
 from statsmodels.tsa.api import VAR
 
 import time
@@ -73,7 +70,7 @@ def main():
     species_index = {}
     for i, spec in enumerate(myspecies): # time window from start to end
         array[i] = species_df[spec]['y'][start:end]
-        array[i][array[i] < 1] = 0 # set to 0 if the value is less than 0.001 cause GAM is tricky
+        array[i][array[i] < 0.01] = 0 # set to 0 if the value is less than 0.001 cause GAM is tricky
         species_index[spec] = i
 
     # save index dictionary to a file

@@ -9,25 +9,12 @@ import pygam as gm
 import copy as cp
 
 
-def clean_basa_pollen_concentration(mydf_pollen_concentration : pd.DataFrame, myspecies : list) -> pd.DataFrame:
-    """
-    Cleans and processes a DataFrame containing pollen concentration data.
-    This function performs the following operations:
-    1. Converts the 'cal BP' column values to negative and sorts them (to get ascending time).
-    2. Maps conflicting species names to standardized names using a predefined dictionary.
-    3. Removes specific species ('Sanguisorba' and 'Ribes') from the provided species list.
-    4. Renames the columns of the DataFrame based on the species mapping.
-    5. Sets the 'cal BP' column as the index of the DataFrame.
-    Args:
-        mydf_pollen_concentration (pd.DataFrame): A DataFrame containing pollen concentration data.
-            It must include a 'cal BP' column and other columns representing species.
-        myspecies (list): A list of species names to be retained in the DataFrame.
-    Returns:
-        pd.DataFrame: A cleaned and processed DataFrame with standardized species names and 'cal BP' as the index.
-    """
-    mydf_pollen_concentration['cal BP'] = - mydf_pollen_concentration['cal BP']
-    mydf_pollen_concentration = mydf_pollen_concentration.fillna(0)
-    mydf_pollen_concentration = mydf_pollen_concentration.sort_values(by=['cal BP'])
+def clean_basa_pollen_concentration(mydf_pollen, myspecies):
+    mydf_pollen['cal BP'] = - mydf_pollen['cal BP']
+    mydf_pollen = mydf_pollen.fillna(0)
+    mydf_pollen = mydf_pollen.sort_values(by=['cal BP'])
+
+    all_species = list(mydf_pollen.columns)
 
     # create a dictionary to map conflicting species names
     species_mapping = {
@@ -59,12 +46,19 @@ def clean_basa_pollen_concentration(mydf_pollen_concentration : pd.DataFrame, my
     myspecies.remove('Ribes')
 
     # replace the column names in mydf_pollen_concentration
-    mydf_pollen_concentration = mydf_pollen_concentration.rename(columns=species_mapping)
+    mydf_pollen = mydf_pollen.rename(columns=species_mapping)
 
-    mydf_pollen_concentration = mydf_pollen_concentration[['cal BP'] + myspecies]
-    mydf_pollen_concentration = mydf_pollen_concentration.set_index('cal BP')
+    metrics_list = ['accrate', 'volume', 'lycadd', 'lyc']
 
-    return mydf_pollen_concentration
+    mydf_pollen = mydf_pollen[['cal BP'] + metrics_list + myspecies] # not taking into account the lycadd / lyc factor
+    mydf_pollen = mydf_pollen.set_index('cal BP')
+
+    conversion = mydf_pollen['accrate'] / mydf_pollen['volume']
+    # print(mydf_pollen[myspecies])
+    for spec in myspecies:
+        mydf_pollen[spec] = mydf_pollen[spec] * conversion
+
+    return mydf_pollen
 
 def plot_abundances(mydf = pd.DataFrame, myspecies = list, dir = 'plots-tests/basa_total_abundances_TESTS.pdf'):
         # sort myspecies by highest aboundance
@@ -91,7 +85,7 @@ if __name__ == '__main__':
 
     myspecies = 'Abies,Pinus,Juniperus,Taxus,Betula,Corylus,Alnus,Carpinus,Salix,Ulmus,Populus,Acer,Fraxinus,Fagus,Tilia,Juglans,Castanea,Quercus caducifolio,Quercus perennifolio,Pistacia,Rhamnus,Phillyrea,Buxus,Sambucus,Viburnum,Sanguisorba,Tamarix,Thymelaeaceae,Ephedra distachya,Ephedra fragilis,Ericaceae,Hereda helix,Ilex aquifolium,Viscum album,Lonicera,Vitis,Oleaceae,Myrtus,Olea,Poaceae,Lygeum spartum,Artemisia,Cichorioideae,Asteroideae,Cardueae,Rubiaceae,Centaurea,Chenopodiaceae,Caryophyllaceae,Plantago,Brassicaceae,Saxifragaceae,Fabaceae,Genista,Lotus type,Trifolium type,Rosaceae,Ribes,Boraginaceae,Sedum,Helianthemum,Lamiaceae,Urticaceae,Rumex,Berberidaceae,Euphorbiaceae,Primulaceae,Scrophulariaceae,Papaver,Campanulaceae,Convolvulaceae,Liliaceae,Iridaceae,Crassulaceae,Ranunculaceae,Cistaceae,Galium,Apiaceae,Valerianaceae,Cerealia type,Polygonaceae,Ranunculus'.split(',')
     
-    mydf = pd.read_csv(dirdatain+'basa_char_par.csv') #'bsm_raw_pollen.csv'
+    mydf = pd.read_csv(dirdatain+'basa_original.csv') #'basa_char_par.csv'
     mydf = clean_basa_pollen_concentration(mydf, myspecies=myspecies)
 
     for spec in myspecies[:]: # ITERATE OVER A COPY
