@@ -1,0 +1,4 @@
+SETTINGS
+basa de la mora
+variables: PAR (WITHOUT the lycopodium)
+conditional variables: delta13C

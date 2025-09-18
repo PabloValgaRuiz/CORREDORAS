@@ -1,0 +1,4 @@
+SETTINGS
+basa de la mora
+variables: abundances
+conditional variables: delta13C

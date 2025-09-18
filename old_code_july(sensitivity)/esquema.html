@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+.markmap-dark {
+  background: #27272a;
+  color: white;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.min.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script><script>((getMarkmap) => {
+          window.WebFontConfig = {
+            custom: {
+              families: [
+                "KaTeX_AMS",
+                "KaTeX_Caligraphic:n4,n7",
+                "KaTeX_Fraktur:n4,n7",
+                "KaTeX_Main:n4,n7,i4,i7",
+                "KaTeX_Math:i4,i7",
+                "KaTeX_Script",
+                "KaTeX_SansSerif:n4,n7,i4",
+                "KaTeX_Size1",
+                "KaTeX_Size2",
+                "KaTeX_Size3",
+                "KaTeX_Size4",
+                "KaTeX_Typewriter"
+              ]
+            },
+            active: () => {
+              getMarkmap().refreshHook.call();
+            }
+          };
+        })(() => window.markmap)</script><script src="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.js" defer></script><script>(r => {
+              setTimeout(r);
+            })(function renderToolbar() {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+              if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("markmap-dark");
+              }
+            })(() => window.markmap,null,{"content":"","children":[{"content":"1. \n<p data-lines=\"0,1\">Results</p>","children":[{"content":"Basa","children":[{"content":"Abundances","children":[{"content":"conditional:  <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><msup><mi>&#x3b4;</mi><mn>13</mn></msup><mi>C</mi></mrow><annotation encoding=\"application/x-tex\">\\delta^{13}C</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.8141em;\"></span><span class=\"mord\"><span class=\"mord mathnormal\" style=\"margin-right:0.03785em;\">&#x3b4;</span><span class=\"msupsub\"><span class=\"vlist-t\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.8141em;\"><span style=\"top:-3.063em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mtight\"><span class=\"mord mtight\">13</span></span></span></span></span></span></span></span></span><span class=\"mord mathnormal\" style=\"margin-right:0.07153em;\">C</span></span></span></span>","children":[],"payload":{"tag":"li","lines":"3,4"}},{"content":"conditional:  <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><msup><mi>&#x3b4;</mi><mn>13</mn></msup><mi>C</mi></mrow><annotation encoding=\"application/x-tex\">\\delta^{13}C</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.8141em;\"></span><span class=\"mord\"><span class=\"mord mathnormal\" style=\"margin-right:0.03785em;\">&#x3b4;</span><span class=\"msupsub\"><span class=\"vlist-t\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.8141em;\"><span style=\"top:-3.063em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mtight\"><span class=\"mord mtight\">13</span></span></span></span></span></span></span></span></span><span class=\"mord mathnormal\" style=\"margin-right:0.07153em;\">C</span></span></span></span> + multipliers","children":[],"payload":{"tag":"li","lines":"4,5"}}],"payload":{"tag":"li","lines":"2,5"}},{"content":"PAR<br>\n(without<br>\nlycopodium)","children":[{"content":"conditional:  <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><msup><mi>&#x3b4;</mi><mn>13</mn></msup><mi>C</mi></mrow><annotation encoding=\"application/x-tex\">\\delta^{13}C</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.8141em;\"></span><span class=\"mord\"><span class=\"mord mathnormal\" style=\"margin-right:0.03785em;\">&#x3b4;</span><span class=\"msupsub\"><span class=\"vlist-t\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.8141em;\"><span style=\"top:-3.063em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mtight\"><span class=\"mord mtight\">13</span></span></span></span></span></span></span></span></span><span class=\"mord mathnormal\" style=\"margin-right:0.07153em;\">C</span></span></span></span>","children":[],"payload":{"tag":"li","lines":"8,9"}},{"content":"conditional:  <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><msup><mi>&#x3b4;</mi><mn>13</mn></msup><mi>C</mi></mrow><annotation encoding=\"application/x-tex\">\\delta^{13}C</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.8141em;\"></span><span class=\"mord\"><span class=\"mord mathnormal\" style=\"margin-right:0.03785em;\">&#x3b4;</span><span class=\"msupsub\"><span class=\"vlist-t\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.8141em;\"><span style=\"top:-3.063em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mtight\"><span class=\"mord mtight\">13</span></span></span></span></span></span></span></span></span><span class=\"mord mathnormal\" style=\"margin-right:0.07153em;\">C</span></span></span></span> + multipliers","children":[],"payload":{"tag":"li","lines":"9,10"}}],"payload":{"tag":"li","lines":"5,10"}}],"payload":{"tag":"li","lines":"1,10"}},{"content":"Garba Guracha<br>\n(still not conditionals other than multipliers)","children":[],"payload":{"tag":"li","lines":"10,13"}}],"payload":{"tag":"li","lines":"0,13","listIndex":1}},{"content":"2. \n<p data-lines=\"13,14\">Sensitivity analysis</p>","children":[{"content":"Bootstrap the multipliers","children":[{"content":"Same for all species","children":[],"payload":{"tag":"li","lines":"15,16"}},{"content":"Different for all species<br>\n(This probably does not achieve anything)","children":[],"payload":{"tag":"li","lines":"16,18"}}],"payload":{"tag":"li","lines":"14,18"}},{"content":"Normal/log normal noise","children":[{"content":"Same for all species","children":[{"content":"Multipliers as conditional","children":[],"payload":{"tag":"li","lines":"20,21"}},{"content":"No conditionals","children":[],"payload":{"tag":"li","lines":"21,22"}}],"payload":{"tag":"li","lines":"19,22"}},{"content":"Different for all species<br>\n(next section <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mo>&#x2192;</mo></mrow><annotation encoding=\"application/x-tex\">\\rightarrow</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.3669em;\"></span><span class=\"mrel\">&#x2192;</span></span></span></span> residual-based bootstrapping)","children":[],"payload":{"tag":"li","lines":"22,24"}}],"payload":{"tag":"li","lines":"18,24"}}],"payload":{"tag":"li","lines":"13,24","listIndex":2}},{"content":"3. \n<p data-lines=\"24,26\">Residual based bootstrapping<br>\n(work in progress)</p>","children":[],"payload":{"tag":"li","lines":"24,26","listIndex":3}}],"payload":{"tag":"ol","lines":"0,26"}},{})</script>
+</body>
+</html>

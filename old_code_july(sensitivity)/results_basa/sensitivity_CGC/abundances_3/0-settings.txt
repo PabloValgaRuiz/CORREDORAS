@@ -1,0 +1,8 @@
+SETTINGS
+basa de la mora
+variables: abundances
+
+conditional variables: the multipliers themselves (each bootstrap their own)
+
+sampling from normal distribution mean = 1 and deviations = np.logspace(-2, np.log10(0.5), num=10)
+(same for all species)

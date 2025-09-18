@@ -1,0 +1,6 @@
+SETTINGS
+basa de la mora
+variables: abundances
+conditional variables: none
+
+bootstrapping the multipliers (same for all species)
