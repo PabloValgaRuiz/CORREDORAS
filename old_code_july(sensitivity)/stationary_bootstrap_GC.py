@@ -165,10 +165,10 @@ def main():
     boot_dir = out_base + '/bootstrap_tables'
     os.makedirs(boot_dir, exist_ok=True)
 
-    n_bootstrap = 10
+    n_bootstrap = 1000
     
     start_time = time.perf_counter()
-    with ProcessPoolExecutor(max_workers=20) as executor:
+    with ProcessPoolExecutor(max_workers=14) as executor:
         func = functools.partial(
             bootstrap_worker,
             array=array,
