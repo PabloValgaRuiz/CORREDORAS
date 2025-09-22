@@ -7,13 +7,13 @@ import time
 import sys
 import os
 
-results_dir = 'results_GG'
-dirdatain = 'GAM_species_GG'
-fit_type = 'fit_300_0.01'
+# results_dir = 'results_GG'
+# dirdatain = 'GAM_species_GG'
+# fit_type = 'fit_300_0.01'
 
-# results_dir = 'results_basa'
-# dirdatain = 'GAM_species'
-# fit_type = 'fit_140_0.01'
+results_dir = 'results_basa'
+dirdatain = 'GAM_species'
+fit_type = 'fit_140_0.01'
 
 def load_pickle_with_pandas(filepath, retry_delay=1):
     while True:
@@ -77,12 +77,12 @@ def grangers_causation_matrix(data : np.array, variables : list, conditional_var
 def load_conditional_variables(start, end):
     conditional_variables = {}
 
-    # # load delta13C
-    # try:
-    #     conditional_variables['delta13C'] = load_pickle_with_pandas(f'{dirdatain}/d13gam_{fit_type}.pkl')['d13C (permil)'].to_numpy()
-    #     conditional_variables['delta13C'] = conditional_variables['delta13C'][start:end] # select the time window
-    # except FileNotFoundError as e:
-    #     print(f"File not found: {dirdatain}/d13gam_{fit_type}.pkl\n check we're not in basa de la mora") # probably using garba guracha (GG) data and not basa
+    # load delta13C
+    try:
+        conditional_variables['delta13C'] = load_pickle_with_pandas(f'{dirdatain}/d13gam_{fit_type}.pkl')['d13C (permil)'].to_numpy()
+        conditional_variables['delta13C'] = conditional_variables['delta13C'][start:end] # select the time window
+    except FileNotFoundError as e:
+        print(f"File not found: {dirdatain}/d13gam_{fit_type}.pkl\n check we're not in basa de la mora") # probably using garba guracha (GG) data and not basa
 
     # load multipliers
     try:
@@ -139,7 +139,7 @@ def main():
 
     # load the conditional variables
     conditional_variables = load_conditional_variables(start, end)
-    conditional_variables = subset_dict(conditional_variables, ['multipliers'])
+    conditional_variables = subset_dict(conditional_variables, ['delta13C','multipliers'])
     #____________________________________________________________________
     # CALCULATE THE ORIGINAL TABLE
     start_time = time.perf_counter()
@@ -168,7 +168,7 @@ def main():
     n_bootstrap = 1000
     
     start_time = time.perf_counter()
-    with ProcessPoolExecutor(max_workers=14) as executor:
+    with ProcessPoolExecutor(max_workers=30) as executor:
         func = functools.partial(
             bootstrap_worker,
             array=array,
