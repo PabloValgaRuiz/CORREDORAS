@@ -131,6 +131,7 @@ if __name__ == '__main__':
 
 #___________________________________ GAM over Mendukilo (delta13 -> temperatures) ___________________________________
 
+
 dirdatain = '../data/'
 delta13 = pd.read_csv(f'{dirdatain}/Mendukilo.csv')
 delta13['age (kyr BP)'] = - delta13['age (kyr BP)'] * 1000  # Convert from kyr to years

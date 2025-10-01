@@ -149,11 +149,11 @@ def main():
                 variables=myspecies,
                 conditional_variables=conditional_variables
                 )
-    
+
     # save the table to a file
     pd.to_pickle(table_causality, f'{out_base}/original_table_{start}-{end}.pkl')
     pd.to_pickle(table_p_values,  f'{out_base}/original_table_p_values_{start}-{end}.pkl')
-    
+
     end_time = time.perf_counter()
     print(f"Time taken: {end_time - start_time} seconds")
 
@@ -166,6 +166,7 @@ def main():
     os.makedirs(boot_dir, exist_ok=True)
 
     n_bootstrap = 1000
+
     
     start_time = time.perf_counter()
     with ProcessPoolExecutor(max_workers=30) as executor:
