@@ -78,3 +78,11 @@ Next are represented the networks obtained for the respective windows of Garba G
 Again, lower percentages of negative links correspond to windows with higher fire activity.
 
 ![](plots_notes/negative_links_GG.png)
+
+## 4. Additional tables
+
+| Time window | % negative links (total links) intracommunity| % negative links (total links) intercommunity|
+| :----: | :----: | :----: |
+| (9798 -> 6253)   | 26.53% (49)  | 22.55% (204) |
+| (6182 -> 3842)   | 41.38% (29)  | 40.37% (161) |
+| (3771 -> -56.87) | 39.13% (23)  | 31.28% (179) |
