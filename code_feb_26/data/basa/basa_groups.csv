@@ -1,0 +1,83 @@
+Taxa,Functional group,Community,Functional disturbance response
+Abies,tree,temperate forest,fire-sensitive
+Pinus,tree,pinewoods,fire-insensitive
+Juniperus,tree,shrubland,fire-sensitive
+Taxus,tree,temperate forest,fire-sensitive
+Betula,tree,temperate forest,weak resprouter
+Corylus,tree,temperate forest,weak resprouter
+Alnus,tree,riverine community,fire-sensitive
+Carpinus,tree,riverine community,fire-sensitive
+Salix,tree,riverine community,fire-sensitive
+Ulmus,tree,riverine community,fire-sensitive
+Populus,tree,riverine community,fire-sensitive
+Acer,tree,temperate forest,fire-sensitive
+Fraxinus,tree,temperate forest,weak resprouter
+Fagus,tree,temperate forest,fire-insensitive
+Tilia,tree,riverine community,fire-sensitive
+Juglans,tree,riverine community,fire-sensitive
+Castanea,tree,temperate forest,fire-sensitive
+Quercus caducifolio,tree,temperate forest,weak resprouter
+Quercus perennifolio,tree,mediterranean,strong resprouter
+Pistacia,shrub,mediterranean,weak resprouter
+Rhamnus,shrub,pinewoods,weak resprouter
+Phillyrea,tree,mediterranean,weak resprouter
+Buxus,shrub,pinewoods,weak resprouter
+Sambucus,shrub,shrubland,strong resprouter
+Viburnum,shrub,mediterranean,strong resprouter
+Sanguisorba,herb,pastureland,fire-resistant
+Tamarix,shrub,shrubland,strong resprouter
+Thymelaeaceae,shrub,shrubland,fire-insensitive
+Ephedra distachya,shrub,mediterranean,fire-insensitive
+Ephedra fragilis,shrub,mediterranean,fire-insensitive
+Ericaceae,shrub,shrubland,strong resprouter
+Hereda helix,herb,pinewoods,fire-sensitive
+Ilex aquifolium,tree,pinewoods,weak resprouter
+Viscum album,herb,pinewoods,fire-sensitive
+Lonicera,shrub,shrubland,fire-sensitive
+Vitis,shrub,mediterranean,fire-sensitive
+Oleaceae,shrub,mediterranean,fire-sensitive
+Myrtus,shrub,shrubland,weak seeder
+Olea,tree,mediterranean,fire-sensitive
+Poaceae,herb,grassland,strong seeder
+Lygeum spartum,herb,mediterranean,strong seeder
+Artemisia,herb,grassland,fire-sensitive
+Cichorioideae,herb,grassland,weak seeder
+Asteroideae,herb,grassland,weak seeder
+Cardueae,herb,grassland,weak seeder
+Rubiaceae,herb,mediterranean,weak resprouter
+Centaurea,herb,grassland,weak seeder
+Chenopodiaceae,herb,grassland,weak seeder
+Caryophyllaceae,herb,grassland,weak seeder
+Plantago,herb,pastureland,weak seeder
+Brassicaceae,herb,grassland,weak seeder
+Saxifragaceae,herb,pinewoods,weak seeder
+Fabaceae,herb,grassland,weak seeder
+Genista,herb,shrubland,weak resprouter
+Lotus type,herb,pastureland,fire-sensitive
+Trifolium type,herb,pastureland,fire-sensitive
+Rosaceae,herb,shrubland,fire-sensitive
+Ribes,shrub,pinewoods,fire-sensitive
+Boraginaceae,herb,pastureland,weak seeder
+Sedum,herb,pinewoods,fire-sensitive
+Helianthemum,herb,grassland,weak seeder
+Lamiaceae,shrub,grassland,weak seeder
+Urticaceae,herb,pastureland,weak resprouter
+Rumex,herb,pastureland,weak resprouter
+Berberidaceae,shrub,mediterranean,fire-sensitive
+Euphorbiaceae,shrub,mediterranean,fire-sensitive
+Primulaceae,herb,grassland,weak seeder
+Scrophulariaceae,herb,grassland,weak seeder
+Papaver,herb,pastureland,weak seeder
+Campanulaceae,herb,grassland,weak seeder
+Convolvulaceae,herb,grassland,weak seeder
+Liliaceae,herb,grassland,weak seeder
+Iridaceae,herb,grassland,weak seeder
+Crassulaceae,herb,rocky community,fire-sensitive
+Ranunculaceae,herb,grassland,fire-sensitive
+Cistaceae,herb,grassland,strong resprouter
+Galium,herb,pinewoods,fire-sensitive
+Apiaceae,herb,pastureland,weak seeder
+Valerianaceae,herb,grassland,weak seeder
+Cerealia type,herb,pastureland,weak seeder
+Polygonaceae,herb,pastureland,weak resprouter
+Ranunculus,herb,grassland,fire-sensitive

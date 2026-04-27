@@ -61,7 +61,7 @@ def clean_basa_pollen_concentration(mydf_pollen, myspecies):
         mydf_pollen_PAR[spec] = mydf_pollen[spec] * multipliers
     
     # pickle the multipliers
-    pd.to_pickle(multipliers, 'results_basa/multipliers.pkl')
+    pd.to_pickle(multipliers, f'./{dirdatain}/{database}/multipliers.pkl')
 
     return mydf_pollen[myspecies] # mydf_pollen or mydf_pollen_PAR
 
@@ -86,11 +86,12 @@ def plot_abundances(mydf = pd.DataFrame, myspecies = list, dir = 'plots-tests/ba
 
 if __name__ == '__main__':
 
-    dirdatain = '../data/'    
+    dirdatain = './data/'
+    database = 'basa'
 
     myspecies = 'Abies,Pinus,Juniperus,Taxus,Betula,Corylus,Alnus,Carpinus,Salix,Ulmus,Populus,Acer,Fraxinus,Fagus,Tilia,Juglans,Castanea,Quercus caducifolio,Quercus perennifolio,Pistacia,Rhamnus,Phillyrea,Buxus,Sambucus,Viburnum,Sanguisorba,Tamarix,Thymelaeaceae,Ephedra distachya,Ephedra fragilis,Ericaceae,Hereda helix,Ilex aquifolium,Viscum album,Lonicera,Vitis,Oleaceae,Myrtus,Olea,Poaceae,Lygeum spartum,Artemisia,Cichorioideae,Asteroideae,Cardueae,Rubiaceae,Centaurea,Chenopodiaceae,Caryophyllaceae,Plantago,Brassicaceae,Saxifragaceae,Fabaceae,Genista,Lotus type,Trifolium type,Rosaceae,Ribes,Boraginaceae,Sedum,Helianthemum,Lamiaceae,Urticaceae,Rumex,Berberidaceae,Euphorbiaceae,Primulaceae,Scrophulariaceae,Papaver,Campanulaceae,Convolvulaceae,Liliaceae,Iridaceae,Crassulaceae,Ranunculaceae,Cistaceae,Galium,Apiaceae,Valerianaceae,Cerealia type,Polygonaceae,Ranunculus'.split(',')
     
-    mydf = pd.read_csv(dirdatain+'basa_original.csv') #'basa_char_par.csv'
+    mydf = pd.read_csv(dirdatain+database+'/basa_original.csv') #'basa_char_par.csv'
     mydf = clean_basa_pollen_concentration(mydf, myspecies=myspecies)
 
     for spec in myspecies[:]: # ITERATE OVER A COPY
@@ -127,13 +128,18 @@ if __name__ == '__main__':
             species[spec]['y'] = cp.copy(YY)
 
         species_df = pd.DataFrame(species)
-        species_df.to_pickle('GAM_species/species_%s.pkl' %(fit_type))
+        species_df.to_pickle(f'./GAM_species/{database}/species_{fit_type}.pkl')
+
+        # SET HERE THE SPECIES INDEX
+        species_index = {}
+        for i, spec in enumerate(myspecies):
+            species_index[spec] = i
+        pd.to_pickle(species_index, f'./GAM_species/{database}/species_index.pkl')
 
 #___________________________________ GAM over Mendukilo (delta13 -> temperatures) ___________________________________
 
 
-dirdatain = '../data/'
-delta13 = pd.read_csv(f'{dirdatain}/Mendukilo.csv')
+delta13 = pd.read_csv(f'{dirdatain}{database}/Mendukilo.csv')
 delta13['age (kyr BP)'] = - delta13['age (kyr BP)'] * 1000  # Convert from kyr to years
 delta13 = delta13.fillna(0)
 delta13 = delta13.sort_values(by=['age (kyr BP)'])
@@ -150,11 +156,11 @@ d13gam_df = pd.DataFrame({
     'd13C (permil)': YY
 })
 
-d13gam_df.to_pickle('GAM_species/d13gam_%s.pkl' %(fit_type))
+d13gam_df.to_pickle(f'./GAM_species/{database}/d13gam_{fit_type}.pkl')
 
 #__________________________________________ GAM over multipliers ______________________________________________________
 
-multipliers = pd.read_pickle('results_basa/multipliers.pkl')
+multipliers = pd.read_pickle(f'./{dirdatain}/{database}/multipliers.pkl')
 vx = gm.utils.make_2d(multipliers.index, verbose=False).astype('float')
 vy = multipliers.values
 
@@ -167,4 +173,4 @@ gam_multipliers_df = pd.DataFrame({
     'multipliers': YY
 })
 
-gam_multipliers_df.to_pickle('GAM_species/gam_multipliers_%s.pkl' %(fit_type))
+gam_multipliers_df.to_pickle(f'./GAM_species/{database}/gam_multipliers_{fit_type}.pkl')

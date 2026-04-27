@@ -1,0 +1,4 @@
+SETTINGS
+basa de la mora
+variables: abundances -> linear
+conditional variables: delta13C, multipliers

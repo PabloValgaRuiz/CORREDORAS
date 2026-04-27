@@ -1,2 +1,6 @@
 .conda/
 nohup.out
+results_basa/**
+results_GG/**
+**/bootstrap_tables/
+**/bootstrap_tables_old/

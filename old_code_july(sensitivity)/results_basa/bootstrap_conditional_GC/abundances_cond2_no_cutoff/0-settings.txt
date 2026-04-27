@@ -1,0 +1,6 @@
+SETTINGS
+basa de la mora
+variables: abundances
+no minimum amount of pollen to count as 0
+
+conditional variables: delta13C, multipliers

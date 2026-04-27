@@ -11,8 +11,10 @@ import os
 # dirdatain = 'GAM_species_GG'
 # fit_type = 'fit_300_0.01'
 
+# BASA RECORDAR AÑADIR EL D13GAM
 results_dir = 'results_basa'
 dirdatain = 'GAM_species'
+# dirdatain = 'linear_species_basa'
 fit_type = 'fit_140_0.01'
 
 def load_pickle_with_pandas(filepath, retry_delay=1):
@@ -31,7 +33,10 @@ def stationary_bootstrap(x):
 
     x_final = np.array([])
     while True:
-        L = np.random.randint(low=1, high=len(x))
+        L = int(np.random.exponential(scale=len(x), size=None))
+        while L > len(x):
+            L = int(np.random.exponential(scale=len(x), size=None))
+            
         x_0 = np.random.randint(low=0, high=len(x))
         
         if len(x_final) + L < len(x):
@@ -59,9 +64,9 @@ def grangers_causation_matrix(data : np.array, variables : list, conditional_var
             try:
                 model = VAR(data_tuple)
                 results = model.fit(maxlags=1)
-                causality = results.test_causality(caused='Y', causing=['X'], kind='f')
+                # causality = results.test_causality(caused='Y', causing=['X'], kind='f')
 
-                df_p_values.loc[r, c] = causality.pvalue
+                df_p_values.loc[r, c] = 1 # causality.pvalue
                 df_causality.loc[r, c] = results.coefs[0][1][0] # get the coefficient of X in the regression of Y
             except Exception as e:
                 # likely if the time series are all or almost all zeros
@@ -77,7 +82,7 @@ def grangers_causation_matrix(data : np.array, variables : list, conditional_var
 def load_conditional_variables(start, end):
     conditional_variables = {}
 
-    # load delta13C
+    # # load delta13C
     try:
         conditional_variables['delta13C'] = load_pickle_with_pandas(f'{dirdatain}/d13gam_{fit_type}.pkl')['d13C (permil)'].to_numpy()
         conditional_variables['delta13C'] = conditional_variables['delta13C'][start:end] # select the time window
@@ -99,6 +104,7 @@ def subset_dict(d, keys):
 def bootstrap_worker(bs_idx, array: np.array, myspecies: list, conditional_variables: dict, boot_dir:str, start:int, end:int):
         # set a seed for numpy random
         np.random.seed(bs_idx)
+        
         bootstrapped_array = np.zeros((len(myspecies), end-start))
         for i, spec in enumerate(myspecies):
             bootstrapped_array[i] = stationary_bootstrap(array[i])
@@ -108,7 +114,7 @@ def bootstrap_worker(bs_idx, array: np.array, myspecies: list, conditional_varia
                     conditional_variables=conditional_variables
                     )
         pd.to_pickle(table_causality_bs, f'{boot_dir}/table_{start}-{end}_bs{bs_idx}.pkl')
-        pd.to_pickle(table_p_values_bs,  f'{boot_dir}/table_p_values_{start}-{end}_bs{bs_idx}.pkl')
+        # pd.to_pickle(table_p_values_bs,  f'{boot_dir}/table_p_values_{start}-{end}_bs{bs_idx}.pkl')
         return bs_idx
 
 def main():
@@ -118,8 +124,10 @@ def main():
     start = int(sys.argv[2])
     end = int(sys.argv[3])
 
-    out_base = f'{results_dir}/bootstrap_conditional_GC/abundances_cond2'
-    
+    # out_base = f'{results_dir}/bootstrap_conditional_GC/abundances_cond2'
+    out_base = f'{results_dir}/bootstrap_conditional_GC/abundances_cond2_cutoff09'
+    os.makedirs(out_base, exist_ok=True)
+
     species_df = load_pickle_with_pandas(f'{dirdatain}/species_%s.pkl' %(fit_type))
     myspecies = list(species_df.columns)
 
@@ -127,11 +135,15 @@ def main():
     # example of one of them: species_df['Betula']['y'] is one row
     array = np.zeros((len(myspecies), end-start))
     species_index = {}
-    for i, spec in enumerate(myspecies): # time window from start to end
-        array[i] = species_df[spec]['y'][start:end]
-        array[i][array[i] < 0.001] = 0 # set to 0 if the value is less than 0.001 (in abundances) cause GAM is tricky
-        species_index[spec] = i        #                                  (0.01 in PAR without lycopodium)
 
+    for i, spec in enumerate(myspecies): # time window from start to end
+        array[i] = species_df[spec]['y'][start:(end)] # this goes over the end at 140, but ignores it.
+
+        # CAN DO THIS IN PLOT RESULTS FILE
+        array[i][array[i] < 0.9] = 0 # set to 0 if the value is less than 0.001 (in abundances) cause GAM is tricky
+                                        #                                  (0.01 in PAR without lycopodium)
+        species_index[spec] = i
+        
     # save index dictionary to a file
     pd.to_pickle(species_index, f'{results_dir}/species_index.pkl')
     # save the species dataframe to a file
@@ -139,7 +151,23 @@ def main():
 
     # load the conditional variables
     conditional_variables = load_conditional_variables(start, end)
+    
+    # BASA DE LA MORA
     conditional_variables = subset_dict(conditional_variables, ['delta13C','multipliers'])
+    # conditional_variables = subset_dict(conditional_variables, [])
+
+    # GARBA GURACHA
+    # conditional_variables = subset_dict(conditional_variables, ['multipliers'])
+
+    # NORMALIZE ALL TIME SERIES
+    # for i,spec in enumerate(myspecies):
+    #     if np.std(array[i]) > 0:
+    #         array[i] = (array[i] - np.mean(array[i])) / np.std(array[i])
+    # for key in conditional_variables:
+    #     if np.std(conditional_variables[key]) > 0:
+    #         conditional_variables[key] = (conditional_variables[key] - np.mean(conditional_variables[key])) / np.std(conditional_variables[key])
+
+
     #____________________________________________________________________
     # CALCULATE THE ORIGINAL TABLE
     start_time = time.perf_counter()
@@ -152,7 +180,7 @@ def main():
 
     # save the table to a file
     pd.to_pickle(table_causality, f'{out_base}/original_table_{start}-{end}.pkl')
-    pd.to_pickle(table_p_values,  f'{out_base}/original_table_p_values_{start}-{end}.pkl')
+    # pd.to_pickle(table_p_values,  f'{out_base}/original_table_p_values_{start}-{end}.pkl')
 
     end_time = time.perf_counter()
     print(f"Time taken: {end_time - start_time} seconds")
@@ -165,11 +193,10 @@ def main():
     boot_dir = out_base + '/bootstrap_tables'
     os.makedirs(boot_dir, exist_ok=True)
 
-    n_bootstrap = 1000
+    n_bootstrap = range(3000, 4000)
 
-    
     start_time = time.perf_counter()
-    with ProcessPoolExecutor(max_workers=30) as executor:
+    with ProcessPoolExecutor(max_workers=None) as executor:
         func = functools.partial(
             bootstrap_worker,
             array=array,
@@ -179,7 +206,7 @@ def main():
             start=start,
             end=end
         )
-        for b in executor.map(func, range(n_bootstrap)):
+        for b in executor.map(func, n_bootstrap):
             print(f"Completed bootstrap {b}")
 
     end_time = time.perf_counter()

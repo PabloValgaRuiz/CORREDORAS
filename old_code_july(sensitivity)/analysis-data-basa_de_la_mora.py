@@ -121,7 +121,7 @@ if __name__ == '__main__':
             species[spec]['prev_x'] = mydf.index.to_numpy()
             species[spec]['prev_y'] = mydf[spec].to_numpy()
 
-            XX = mygam.generate_X_grid(term=0, n=140)
+            XX = mygam.generate_X_grid(term=0, n=n_splines)
             YY = mygam.predict(XX)
             species[spec]['x'] = cp.copy(XX)[:,0]
             species[spec]['y'] = cp.copy(YY)

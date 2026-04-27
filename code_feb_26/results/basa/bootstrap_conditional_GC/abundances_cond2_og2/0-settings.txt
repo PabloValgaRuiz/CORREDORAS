@@ -1,0 +1,5 @@
+SETTINGS
+basa de la mora
+variables: abundances
+CUTOFF of 0.001 -> 0
+conditional variables: delta13C, multipliers

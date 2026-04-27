@@ -1,0 +1,5 @@
+SETTINGS
+basa de la mora
+variables: abundances
+NO CUTOFF FOR MINIMUM POLLEN
+conditional variables: delta13C, multipliers
