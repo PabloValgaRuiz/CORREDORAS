@@ -1,0 +1,5 @@
+SETTINGS
+moossee
+variables: pollen counts
+NO CUTOFF FOR MINIMUM POLLEN
+conditional variables: multipliers

@@ -1,0 +1,6 @@
+SETTINGS
+basa de la mora
+variables: abundances
+NO CUTOFF FOR MINIMUM POLLEN
+conditional variables: delta13C, multipliers
+BOOTSTRAP DONE INCORRECTLY, USING THE X CONDITIONALS INSTEAD OF Y (for conditional variables)

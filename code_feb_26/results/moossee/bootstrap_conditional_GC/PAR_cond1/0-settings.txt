@@ -1,0 +1,5 @@
+SETTINGS
+moossee
+variables: PAR
+NO CUTOFF FOR MINIMUM POLLEN
+conditional variables: multipliers

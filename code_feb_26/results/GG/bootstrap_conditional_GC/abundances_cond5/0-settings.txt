@@ -1,0 +1,6 @@
+SETTINGS
+garba guracha
+variables: percentages
+NO CUTOFF FOR MINIMUM POLLEN
+conditional variables: multipliers
+BOOTSTRAP DONE CORRECTLY (for conditional variables)
