@@ -226,8 +226,6 @@ def main():
     conditional_variables['biomass'] = conditional_variables['multipliers'] * array.sum(axis=0)
 
     if database in ['basa']: # BASA DE LA MORA
-        # conditional_variables = subset_dict(conditional_variables, [])
-        # conditional_variables = subset_dict(conditional_variables, ['delta13C','multipliers'])
         conditional_variables = subset_dict(conditional_variables, ['delta13C'])
 
     elif database in ['GG', 'moossee', 'Burgäschisee']: # GARBA GURACHA, MOOSSEE y Burgäschisee

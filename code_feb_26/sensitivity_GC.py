@@ -165,7 +165,7 @@ def main():
     start = int(sys.argv[2])
     end = int(sys.argv[3])
 
-    out_base = f'{results_dir}/sensitivity/cond1'
+    out_base = f'{results_dir}/sensitivity/cond2'
 
     os.makedirs(out_base, exist_ok=True)
 
@@ -184,13 +184,13 @@ def main():
     
     # load the conditional variables
     conditional_variables = load_conditional_variables(start, end)
-    
+    conditional_variables['biomass'] = conditional_variables['multipliers'] * array.sum(axis=0)
+
     if database in ['basa']: # BASA DE LA MORA
-        # conditional_variables = subset_dict(conditional_variables, [])
-        conditional_variables = subset_dict(conditional_variables, ['delta13C','multipliers'])
+        conditional_variables = subset_dict(conditional_variables, ['delta13C'])
 
     elif database in ['GG', 'moossee', 'Burgäschisee']: # GARBA GURACHA, MOOSSEE y Burgäschisee
-        conditional_variables = subset_dict(conditional_variables, ['multipliers'])
+        conditional_variables = subset_dict(conditional_variables, ['biomass'])
 
     # NORMALIZE ALL TIME SERIES
     if(NORMALIZE == True):
@@ -257,7 +257,15 @@ def main():
     for dev_id, deviation in enumerate(deviations):
         # construct 10 random datasets multiplied by that deviation
         for j in range(0, 10):
-            random_multipliers = rng.normal(loc=1.0, scale=deviation, size=T)
+
+            # random_multipliers = rng.normal(loc=1.0, scale=deviation, size=T)
+            bootstrapped_indices = stationary_bootstrap(end-start)
+            random_multipliers = conditional_variables['biomass'][bootstrapped_indices]
+            print("mean: ", random_multipliers.mean())
+            print("std: ", random_multipliers.std())
+            # set deviation to 1, mean to 0, then multiply by dev and add 1 to get mean=1 and std=dev
+            random_multipliers = 1 + ((random_multipliers - random_multipliers.mean()) * deviation / random_multipliers.std())
+
             scaled_array = array * random_multipliers # NxT * T should check it's on the right axis, although if it's not it should send an error
             
             conditional_variables_per_species = np.zeros((len(myspecies), 1, end-start))
@@ -266,7 +274,7 @@ def main():
 
             # DO CAUSALITY
             table_causality, table_p_values = grangers_causation_matrix_OLS(
-                array,
+                scaled_array,
                 variables=myspecies,
                 conditional_variables= conditional_variables_per_species
                 )
