@@ -11,9 +11,9 @@ Salix,tree,riverine community,fire-sensitive
 Ulmus,tree,riverine community,fire-sensitive
 Populus,tree,riverine community,fire-sensitive
 Acer,tree,temperate forest,fire-sensitive
-Fraxinus,tree,temperate forest,weak resprouter
+Fraxinus,tree,riverine community,weak resprouter
 Fagus,tree,temperate forest,fire-insensitive
-Tilia,tree,riverine community,fire-sensitive
+Tilia,tree,temperate forest,fire-sensitive
 Juglans,tree,riverine community,fire-sensitive
 Castanea,tree,temperate forest,fire-sensitive
 Quercus caducifolio,tree,temperate forest,weak resprouter
@@ -58,7 +58,7 @@ Trifolium type,herb,pastureland,fire-sensitive
 Rosaceae,herb,shrubland,fire-sensitive
 Ribes,shrub,pinewoods,fire-sensitive
 Boraginaceae,herb,pastureland,weak seeder
-Sedum,herb,pinewoods,fire-sensitive
+Sedum,herb,rocky community,fire-sensitive
 Helianthemum,herb,grassland,weak seeder
 Lamiaceae,shrub,grassland,weak seeder
 Urticaceae,herb,pastureland,weak resprouter

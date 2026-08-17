@@ -1,4 +1,5 @@
 .conda/
+graphenv/
 nohup.out
 results_basa/**
 results_GG/**
